@@ -41,8 +41,31 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "drf_spectacular",
     "tickets",
 ]
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "AutoTriage API",
+    "DESCRIPTION": "AI 기반 티켓 트리아지 시스템의 Core API 문서",
+    "VERSION": "0.1.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+
+    "TAGS": [
+        {"name": "Tickets", "description": "티켓 생성/조회 API"},
+        {"name": "Auth", "description": "인증 토큰 발급/갱신"},
+        {"name": "Health", "description": "헬스체크"},
+    ],
+
+    # Swagger Authorize (Bearer JWT)
+    "APPEND_COMPONENTS": {
+        "securitySchemes": {
+            "bearerAuth": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"}
+        }
+    },
+    "SECURITY": [{"bearerAuth": []}],
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

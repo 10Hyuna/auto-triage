@@ -16,8 +16,36 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework.permissions import AllowAny
+
+from .views import (
+    HealthView,
+    PublicTokenObtainPairView,
+    PublicTokenRefreshView,
+)
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+
+    # Core API (기본: 인증 필요)
+    path("api/", include("tickets.urls")),
+
+    # Core API (기본: 인증 필요)
+    path("api/", include("tickets.urls")),
+
+    # Public endpoints
+    path("api/health/", HealthView.as_view(), name="health"),
+
+    # Auth (Public)
+    path("api/auth/token/", PublicTokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/auth/token/refresh/", PublicTokenRefreshView.as_view(), name="token_refresh"),
+
+    # OpenAPI schema + Swagger UI (Public)
+    path("api/schema/", SpectacularAPIView.as_view(permission_classes=[AllowAny]), name="schema"),
+    path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema", permission_classes=[AllowAny]), name="swagger-ui"),
+
 ]
