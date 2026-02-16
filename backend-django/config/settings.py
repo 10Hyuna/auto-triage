@@ -46,8 +46,7 @@ INSTALLED_APPS = [
     "tickets",
 ]
 
-<<<<<<< HEAD
-=======
+
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 
@@ -85,7 +84,6 @@ SPECTACULAR_SETTINGS = {
     "SECURITY": [{"bearerAuth": []}],
 }
 
->>>>>>> d7d217f (feat: 공통 에러 응답 포맷 및 예외 처리 핸들러 추가)
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
