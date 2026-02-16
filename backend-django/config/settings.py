@@ -16,6 +16,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+ALLOW_DEV_SIGNUP = os.getenv("ALLOW_DEV_SIGNUP", "false").lower() == "true"
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -45,6 +47,22 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "tickets",
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+
+    # JWT 인증 (Authorize 버튼 뜸)
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+    ),
+
+    # 공통 에러 응답 포맷
+    "EXCEPTION_HANDLER": "config.exceptions.custom_exception_handler",
+}
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "AutoTriage API",
