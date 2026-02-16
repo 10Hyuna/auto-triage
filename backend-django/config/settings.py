@@ -16,6 +16,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+ALLOW_DEV_SIGNUP = os.getenv("ALLOW_DEV_SIGNUP", "false").lower() == "true"
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -41,8 +43,47 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "drf_spectacular",
     "tickets",
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+
+    # JWT 인증 (Authorize 버튼 뜸)
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+    ),
+
+    # 공통 에러 응답 포맷
+    "EXCEPTION_HANDLER": "config.exceptions.custom_exception_handler",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "AutoTriage API",
+    "DESCRIPTION": "AI 기반 티켓 트리아지 시스템의 Core API 문서",
+    "VERSION": "0.1.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+
+    "TAGS": [
+        {"name": "Tickets", "description": "티켓 생성/조회 API"},
+        {"name": "Auth", "description": "인증 토큰 발급/갱신"},
+        {"name": "Health", "description": "헬스체크"},
+    ],
+
+    # Swagger Authorize (Bearer JWT)
+    "APPEND_COMPONENTS": {
+        "securitySchemes": {
+            "bearerAuth": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"}
+        }
+    },
+    "SECURITY": [{"bearerAuth": []}],
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
